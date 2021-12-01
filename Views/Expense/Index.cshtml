@@ -1,0 +1,44 @@
+@model IEnumerable<InAndOut1.Models.Expense>
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Expenses</h2>
+        </div>
+        <div class = "col-6">
+            <a asp-controller="Expense" asp-action="Create" class="btn btn-primary">Create Expense</a>
+        </div>
+    </div>
+</div>
+<br/>
+
+@if(Model.Count()>0)
+{
+    <table class ="table-bordered table-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th>
+                    Item
+                </th>
+                <th>
+                    Amount
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var expense in Model)
+            {
+                <tr>
+                    <td width="40%">@expense.ExpenseName</td>
+                    <td width="40%">£@expense.Amount</td>
+                    <td width="20%">
+                        <div class="d-flex justify-content-around btn-group w-100" role="group">
+                            <a asp-controller="Expense" asp-action="Update" asp-route-Id="@expense.Id" class="btn btn-primary px-3">Update</a>
+                            <a asp-controller="Expense" asp-action="Delete" asp-route-Id="@expense.Id" class="btn btn-danger px-3">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
