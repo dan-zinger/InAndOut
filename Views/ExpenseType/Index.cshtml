@@ -1,0 +1,40 @@
+@model IEnumerable<InAndOut1.Models.ExpenseType>
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Expense Types</h2>
+        </div>
+        <div class = "col-6">
+            <a asp-controller="ExpenseType" asp-action="Create" class="btn btn-primary">Create Expense Type</a>
+        </div>
+    </div>
+</div>
+<br/>
+
+@if(Model.Count()>0)
+{
+    <table class ="table-bordered table-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th>
+                    Expense Types
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var expenseType in Model)
+            {
+                <tr>
+                    <td width="80%">@expenseType.Name</td>
+                    <td width="20%">
+                        <div class="d-flex justify-content-around btn-group w-100" role="group">
+                            <a asp-controller="ExpenseType" asp-action="Update" asp-route-Id="@expenseType.Id" class="btn btn-primary px-3">Update</a>
+                            <a asp-controller="ExpenseType" asp-action="Delete" asp-route-Id="@expenseType.Id" class="btn btn-danger px-3">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
