@@ -39,6 +39,12 @@ namespace InAndOut1.Controllers
                 _db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            else
+            {
+                var errors = ModelState.Select(x => x.Value.Errors)
+                                    .Where(y=>y.Count>0)
+                                    .ToList();
+            }
             return View(obj);
         }
         

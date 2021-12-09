@@ -1,6 +1,8 @@
 using InAndOut1.Data;
 using InAndOut1.Models;
+using InAndOut1.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,13 +20,52 @@ namespace InAndOut1.Controllers
         }
         public IActionResult Index()
         {
-            IEnumerable<Expense> objList = _db.Expenses;
-            return View(objList);
+            //  _db.Expenses;
+            
+            // foreach (var obj in objList.ToList())
+            // {
+            //     obj.ExpenseType = _db.ExpenseTypes.FirstOrDefault(u => u.Id == obj.ExpenseTypeId).ToList();
+            // }
+
+  
+        var expenseViewModel = from e in _db.Expenses
+                               join et in _db.ExpenseTypes on e.ExpenseTypeId equals et.Id
+                               select new ExpenseViewModel { Id = e.Id, ExpenseName = e.ExpenseName, Amount = e.Amount, ExpenseTypeId = e.ExpenseTypeId, ExpenseType = et.Name};
+            return View(expenseViewModel);
+            
+            // var objList = (from e in _db.Expenses join t in _db.ExpenseTypes on e.ExpenseTypeId equals t.Id select new  
+            // {  
+            //     e.Id,
+            //     e.ExpenseName,
+            //     e.Amount,
+            //     e.ExpenseTypeId,
+            //     t.Name
+            // }).ToList();
+
+            // var result = new List<ExpenseViewModel>();
+            // foreach (var obj in objList)
+            // {
+            //     var expenseVM = new ExpenseViewModel();
+            //     expenseVM.Id = obj.Id;
+            //     expenseVM.ExpenseName = obj.ExpenseName;
+            //     expenseVM.Amount = obj.Amount;
+            //     expenseVM.ExpenseTypeId = obj.ExpenseTypeId;
+            //     expenseVM.ExpenseType = obj.Name;
+            // }
+
+            // return View(result);
 
         }
 
         public IActionResult Create()
         {
+            IEnumerable<SelectListItem> TypeDropDown = _db.ExpenseTypes.Select(i => new SelectListItem 
+            {
+                Text = i.Name,
+                Value = i.Id.ToString()
+            }); 
+
+            ViewBag.TypeDropDown = TypeDropDown;
             return View();
 
         }
@@ -72,6 +113,14 @@ namespace InAndOut1.Controllers
 
         public IActionResult Update(int? id)
         {
+            IEnumerable<SelectListItem> TypeDropDown = _db.ExpenseTypes.Select(i => new SelectListItem 
+            {
+                Text = i.Name,
+                Value = i.Id.ToString()
+            }); 
+
+            ViewBag.TypeDropDown = TypeDropDown;
+
             if (id == null || id == 0)
             {
                 return NotFound();

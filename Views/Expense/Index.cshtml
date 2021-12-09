@@ -1,4 +1,4 @@
-@model IEnumerable<InAndOut1.Models.Expense>
+@model IEnumerable<InAndOut1.Models.ViewModels.ExpenseViewModel>
 
 <div class="container p-3">
     <div class="row pt-4">
@@ -23,15 +23,19 @@
                 <th>
                     Amount
                 </th>
+                <th>
+                    Type
+                </th>
             </tr>
         </thead>
         <tbody>
             @foreach (var expense in Model)
             {
                 <tr>
-                    <td width="40%">@expense.ExpenseName</td>
-                    <td width="40%">£@expense.Amount</td>
-                    <td width="20%">
+                    <td width="25%">@expense.ExpenseName</td>
+                    <td width="25%">£@expense.Amount</td>
+                    <td width="25%">@expense.ExpenseType</td>
+                    <td width="25%">
                         <div class="d-flex justify-content-around btn-group w-100" role="group">
                             <a asp-controller="Expense" asp-action="Update" asp-route-Id="@expense.Id" class="btn btn-primary px-3">Update</a>
                             <a asp-controller="Expense" asp-action="Delete" asp-route-Id="@expense.Id" class="btn btn-danger px-3">Delete</a>

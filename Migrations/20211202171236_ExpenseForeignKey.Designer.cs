@@ -9,8 +9,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace InAndOut1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211130135940_UpdateExpenseModel")]
-    partial class UpdateExpenseModel
+    [Migration("20211202171236_ExpenseForeignKey")]
+    partial class ExpenseForeignKey
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,9 +34,30 @@ namespace InAndOut1.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(50)");
 
+                    b.Property<int>("ExpenseTypeId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("ExpenseTypeId");
+
                     b.ToTable("Expenses");
+                });
+
+            modelBuilder.Entity("InAndOut1.Models.ExpenseType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ExpenseTypes");
                 });
 
             modelBuilder.Entity("InAndOut1.Models.Item", b =>
@@ -58,6 +79,17 @@ namespace InAndOut1.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Items");
+                });
+
+            modelBuilder.Entity("InAndOut1.Models.Expense", b =>
+                {
+                    b.HasOne("InAndOut1.Models.ExpenseType", "ExpenseType")
+                        .WithMany()
+                        .HasForeignKey("ExpenseTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ExpenseType");
                 });
 #pragma warning restore 612, 618
         }

@@ -2,7 +2,7 @@
 
 namespace InAndOut1.Migrations
 {
-    public partial class ExpenseModel : Migration
+    public partial class ExpenseForeignKey1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

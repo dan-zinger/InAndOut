@@ -9,8 +9,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace InAndOut1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211129143525_ExpenseModel1")]
-    partial class ExpenseModel1
+    [Migration("20211202171820_ExpenseForeignKey1")]
+    partial class ExpenseForeignKey1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,15 +27,37 @@ namespace InAndOut1.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<double>("Amount")
-                        .HasColumnType("double precision");
+                    b.Property<int>("Amount")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("Item")
+                    b.Property<string>("ExpenseName")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<int>("ExpenseTypeId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExpenseTypeId");
+
+                    b.ToTable("Expenses");
+                });
+
+            modelBuilder.Entity("InAndOut1.Models.ExpenseType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Expenses");
+                    b.ToTable("ExpenseTypes");
                 });
 
             modelBuilder.Entity("InAndOut1.Models.Item", b =>
@@ -57,6 +79,22 @@ namespace InAndOut1.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Items");
+                });
+
+            modelBuilder.Entity("InAndOut1.Models.Expense", b =>
+                {
+                    b.HasOne("InAndOut1.Models.ExpenseType", "ExpenseType")
+                        .WithMany("Expenses")
+                        .HasForeignKey("ExpenseTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ExpenseType");
+                });
+
+            modelBuilder.Entity("InAndOut1.Models.ExpenseType", b =>
+                {
+                    b.Navigation("Expenses");
                 });
 #pragma warning restore 612, 618
         }
